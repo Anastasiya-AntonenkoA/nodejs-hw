@@ -38,6 +38,12 @@ app.get('/test-error', () => {
   throw new Error('Simulated server error');
 });
 
+app.use((req, res, next) => {
+  res.status(404).json({
+    message: "Route not found"
+  });
+});
+
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
   const isProd = process.env.NODE_ENV === "production";

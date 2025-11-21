@@ -7,8 +7,6 @@ export const getAllNotes = async (req, res) => {
   const { tag, search } = req.query;
 
   const skip = (page - 1) * perPage;
-
-  let notesQuery = Note.find(filter);
   const filter = {};
 
   if (tag) {
@@ -17,6 +15,8 @@ export const getAllNotes = async (req, res) => {
   if (search) {
     filter.$text = { $search: search };
   }
+
+  let notesQuery = Note.find(filter);
 
   const [totalNotes, notes] = await Promise.all([
     notesQuery.clone().countDocuments(),

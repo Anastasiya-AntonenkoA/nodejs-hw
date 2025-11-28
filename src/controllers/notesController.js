@@ -7,7 +7,7 @@ export const getAllNotes = async (req, res) => {
   const { tag, search } = req.query;
 
   const skip = (page - 1) * perPage;
-  const filter = {};
+  const filter = {userId: req.user._id};
 
   if (tag) {
     filter.tag = tag;
@@ -16,7 +16,7 @@ export const getAllNotes = async (req, res) => {
     filter.$text = { $search: search };
   }
 
-  let notesQuery = Note.find({ userId: req.user._id });
+  let notesQuery = Note.find(filter);
 
   const [totalNotes, notes] = await Promise.all([
     notesQuery.clone().countDocuments(),
@@ -50,7 +50,10 @@ export const getNoteById = async (req, res, next) => {
 };
 
 export const createNote = async (req, res) => {
-  const note = await Note.create(req.body);
+  const note = await Note.create({
+    ...req.body,
+    userId: req.user._id,
+  });
   res.status(201).json(note);
 };
 
@@ -84,13 +87,4 @@ export const updateNote = async (req, res, next) => {
   }
 
   res.status(200).json(note);
-};
-
-export const createStudent = async (req, res) => {
-  const note = await Note.create({
-    ...req.body,
-    userId: req.user._id,
-  });
-
-  res.status(201).json(note);
 };

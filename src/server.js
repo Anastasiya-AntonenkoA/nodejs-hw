@@ -17,15 +17,13 @@ const app = express();
 const PORT = process.env.PORT ?? 3000;
 
 app.use(logger);
-app.use(express.json());
-app.use(cors());
-
-app.use(authRoutes);
-app.use(notesRoutes);
 
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
+
+app.use(authRoutes);
+app.use(notesRoutes);
 
 app.use(notFoundHandler);
 app.use(errors());
